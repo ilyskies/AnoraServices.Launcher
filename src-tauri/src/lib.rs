@@ -16,15 +16,15 @@ pub fn run() {
             }
 
             std::thread::spawn(move || {
-                // std::thread::sleep(std::time::Duration::from_secs(3));
+                std::thread::sleep(std::time::Duration::from_secs(3));
 
-                // if let Some(updater) = app_handle.get_webview_window("updater") {
-                //     let _ = updater.close();
-                // }
+                if let Some(updater) = app_handle.get_webview_window("updater") {
+                    let _ = updater.close();
+                }
 
-                // if let Some(launcher) = app_handle.get_webview_window("launcher") {
-                //     let _ = launcher.show();
-                // }
+                if let Some(launcher) = app_handle.get_webview_window("launcher") {
+                    let _ = launcher.show();
+                }
             });
 
             Ok(())
