@@ -10,28 +10,18 @@
     "beforeBuildCommand": "bun build"
   },
   "app": {
+    "withGlobalTauri": true,
     "windows": [
       {
-        "label": "updater",
-        "title": "Anora Updater",
-        "url": "/updater",
-        "width": 420,
-        "height": 700,
-        "resizable": false,
-        "decorations": false,
-        "transparent": false,
-        "visible": true,
-        "center": true
-      },
-      {
-        "label": "launcher",
+        "label": "main",
         "title": "Anora Launcher",
-        "url": "/",
+        "url": "/home",
         "width": 1440,
         "height": 768,
         "resizable": true,
         "decorations": false,
-        "visible": false
+        "visible": true,
+        "center": true
       }
     ],
     "security": {
@@ -48,5 +38,12 @@
       "icons/icon.icns",
       "icons/icon.ico"
     ]
+  },
+  "plugins": {
+    "deep-link": {
+      "desktop": {
+        "schemes": ["anora"]
+      }
+    }
   }
 }

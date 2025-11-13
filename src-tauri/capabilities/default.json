@@ -2,7 +2,11 @@
   "$schema": "../gen/schemas/desktop-schema.json",
   "identifier": "default",
   "description": "enables the default permissions",
-  "windows": ["main", "launcher"],
+  "windows": [
+    "main",
+    "launcher",
+    "updater"
+  ],
   "permissions": [
     "core:path:default",
     "core:event:default",
@@ -16,6 +20,8 @@
     "core:window:allow-minimize",
     "core:window:allow-close",
     "core:window:allow-set-focus",
-    "core:webview:allow-internal-toggle-devtools"
+    "core:webview:allow-internal-toggle-devtools",
+    "deep-link:default",
+    "shell:default"
   ]
 }
