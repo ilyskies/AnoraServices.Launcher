@@ -7,6 +7,7 @@ interface OnboardingState {
   currentStep: OnboardingStep;
   completedSteps: OnboardingStep[];
   username: string | null;
+  hasCompletedOnboarding: boolean;
 
   setStep: (step: OnboardingStep) => void;
   completeStep: (step: OnboardingStep) => void;
@@ -22,6 +23,7 @@ export const useOnboardingStore = create<OnboardingState>()(
       currentStep: "terms",
       completedSteps: [],
       username: null,
+      hasCompletedOnboarding: false,
 
       setStep: (step) => {
         set({ currentStep: step });
@@ -30,10 +32,18 @@ export const useOnboardingStore = create<OnboardingState>()(
       completeStep: (step) => {
         const { completedSteps } = get();
         if (!completedSteps.includes(step)) {
+          const newCompletedSteps = [...completedSteps, step];
+
+          const newHasCompletedOnboarding =
+            newCompletedSteps.includes("complete");
+
           set({
-            completedSteps: [...completedSteps, step],
+            completedSteps: newCompletedSteps,
             currentStep: step,
+            hasCompletedOnboarding: newHasCompletedOnboarding,
           });
+        } else {
+          console.log("Step already completed, skipping");
         }
       },
 
@@ -46,6 +56,7 @@ export const useOnboardingStore = create<OnboardingState>()(
           currentStep: "terms",
           completedSteps: [],
           username: null,
+          hasCompletedOnboarding: false,
         });
       },
 
@@ -62,7 +73,7 @@ export const useOnboardingStore = create<OnboardingState>()(
     {
       name: "anora-onboarding",
       storage: createJSONStorage(() => localStorage),
-      version: 1,
+      version: 4,
     }
   )
 );
@@ -75,6 +86,7 @@ export const useOnboarding = () => {
     completedSteps: store.completedSteps,
     username: store.username,
     progress: store.getProgress(),
+    hasCompletedOnboarding: store.hasCompletedOnboarding,
 
     setStep: store.setStep,
     completeStep: store.completeStep,

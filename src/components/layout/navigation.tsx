@@ -1,6 +1,7 @@
 "use client";
 
 import { Home, Library, Settings } from "lucide-react";
+import Image from "next/image";
 
 interface NavigationProps {
   activeTab: "home" | "library" | "settings";
@@ -15,8 +16,14 @@ export function Navigation({ activeTab, onTabChange }: NavigationProps) {
 
   return (
     <nav className="w-56 bg-background/50 backdrop-blur-sm border-r border-border/30 flex flex-col py-8 px-3 gap-8">
-      <div className="px-2">
-        <h1 className="text-xl font-bold text-white">placeholder</h1>
+      <div className="px-2 flex justify-center">
+        <Image
+          src="/logo.png"
+          alt="Logo"
+          width={60}
+          height={60}
+          className="flex-shrink-0"
+        />
       </div>
 
       <div className="flex flex-col gap-3">

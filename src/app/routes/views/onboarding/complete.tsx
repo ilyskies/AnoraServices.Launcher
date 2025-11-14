@@ -4,100 +4,160 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { useOnboarding } from "@/lib/stores/onboarding";
+import { useSocketStore } from "@/lib/socket";
+import { useAuth } from "@/lib/stores/auth";
+import { Background } from "@/components/shared/background";
+import { CheckCircle, Loader2, Rocket } from "lucide-react";
 
 export default function OnboardingCompleteView() {
   const router = useRouter();
   const [stage, setStage] = useState(0);
   const { completeStep, setStep } = useOnboarding();
+  const { isConnected, send } = useSocketStore();
+  const { user } = useAuth();
 
   useEffect(() => {
     setStep("complete");
     completeStep("complete");
 
+    if (isConnected && user) {
+      send("setup_complete", undefined);
+    }
+
     const timers = [
-      setTimeout(() => setStage(1), 2000),
-      setTimeout(() => setStage(2), 3500),
-      setTimeout(() => router.push("/home"), 6000),
+      setTimeout(() => setStage(1), 1200),
+      setTimeout(() => setStage(2), 2800),
+      setTimeout(() => setStage(3), 4400),
+      setTimeout(() => router.push("/home"), 7000),
     ];
 
     return () => timers.forEach((timer) => clearTimeout(timer));
-  }, [completeStep, router, setStep]);
+  }, [completeStep, router, setStep, isConnected, send, user]);
 
   return (
-    <div className="relative min-h-screen flex items-center justify-center p-4">
-      <div className="fixed inset-0 bg-gradient-to-br from-slate-950 via-slate-800 to-blue-950 -z-20" />
+    <div className="min-h-screen bg-background flex items-center justify-center p-4">
+      <Background />
 
-      <div className="fixed inset-0 -z-10 overflow-hidden">
-        <div className="absolute top-1/3 right-1/4 w-96 h-96 bg-blue-500/20 rounded-full blur-3xl animate-pulse" />
-        <div className="absolute bottom-1/3 left-1/4 w-80 h-80 bg-cyan-500/10 rounded-full blur-3xl" />
-      </div>
-
-      <div className="relative z-10 text-center max-w-3xl space-y-8">
-        <div className="flex justify-center gap-2 mb-4 h-8">
-          {stage === 0 && (
-            <div className="flex gap-2">
-              <motion.div
-                className="w-2 h-2 bg-cyan-400 rounded-full"
-                animate={{ opacity: [0.3, 1, 0.3] }}
-                transition={{ duration: 1.5, repeat: Number.POSITIVE_INFINITY }}
-              />
-              <motion.div
-                className="w-2 h-2 bg-blue-400 rounded-full"
-                animate={{ opacity: [0.3, 1, 0.3] }}
-                transition={{
-                  duration: 1.5,
-                  repeat: Number.POSITIVE_INFINITY,
-                  delay: 0.3,
-                }}
-              />
-              <motion.div
-                className="w-2 h-2 bg-cyan-400 rounded-full"
-                animate={{ opacity: [0.3, 1, 0.3] }}
-                transition={{
-                  duration: 1.5,
-                  repeat: Number.POSITIVE_INFINITY,
-                  delay: 0.6,
-                }}
-              />
+      <div className="w-full max-w-sm">
+        <motion.div
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
+          className="bg-card/80 backdrop-blur-xl rounded-xl border border-border p-6"
+        >
+          <div className="text-center space-y-6">
+            <div className="space-y-2">
+              <h1 className="text-xl font-semibold text-foreground">
+                Onboarding Complete
+              </h1>
+              <div className="flex justify-center space-x-1.5">
+                {[1, 2, 3].map((step) => (
+                  <motion.div
+                    key={step}
+                    initial={{ scale: 0 }}
+                    animate={{ scale: stage >= step ? 1 : 0.5 }}
+                    className={`w-1.5 h-1.5 rounded-full ${
+                      stage >= step ? "bg-primary" : "bg-muted"
+                    }`}
+                  />
+                ))}
+              </div>
             </div>
-          )}
-        </div>
 
-        <AnimatePresence mode="wait">
-          {stage === 1 && (
-            <motion.div
-              key="hi"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.4, ease: "easeInOut" }}
-            >
-              <h1 className="text-6xl md:text-7xl font-bold text-white drop-shadow-lg">
-                Hi
-              </h1>
-            </motion.div>
-          )}
+            <AnimatePresence mode="wait">
+              {stage === 0 && (
+                <motion.div
+                  key="loading"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  className="space-y-3"
+                >
+                  <Loader2 className="w-5 h-5 text-primary animate-spin mx-auto" />
+                  <p className="text-muted-foreground text-sm">
+                    Finalizing setup...
+                  </p>
+                </motion.div>
+              )}
 
-          {stage === 2 && (
-            <motion.div
-              key="main"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ duration: 0.5, ease: "easeInOut" }}
-              className="space-y-4"
-            >
-              <h1 className="text-4xl md:text-5xl font-bold text-white tracking-tight leading-tight">
-                We&apos;re getting some stuff ready
-              </h1>
-              <p className="text-lg md:text-xl text-gray-300 font-light tracking-wide">
-                Please wait, this won&apos;t take too long
-              </p>
-            </motion.div>
-          )}
-        </AnimatePresence>
+              {stage === 1 && (
+                <motion.div
+                  key="profile"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  className="space-y-2"
+                >
+                  <div className="flex items-center justify-center space-x-2">
+                    <CheckCircle className="w-4 h-4 text-green-500" />
+                    <span className="text-foreground text-sm">
+                      Profile ready
+                    </span>
+                  </div>
+                  {user?.UserAccount?.DisplayName && (
+                    <p className="text-primary font-medium text-sm">
+                      Welcome, {user.UserAccount.DisplayName}
+                    </p>
+                  )}
+                </motion.div>
+              )}
+
+              {stage === 2 && (
+                <motion.div
+                  key="connection"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  className="space-y-2"
+                >
+                  <div className="flex items-center justify-center space-x-2">
+                    {isConnected ? (
+                      <CheckCircle className="w-4 h-4 text-green-500" />
+                    ) : (
+                      <Loader2 className="w-4 h-4 text-yellow-500 animate-spin" />
+                    )}
+                    <span className="text-foreground text-sm">
+                      {isConnected ? "Connected" : "Connecting..."}
+                    </span>
+                  </div>
+                </motion.div>
+              )}
+
+              {stage === 3 && (
+                <motion.div
+                  key="ready"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  className="space-y-4"
+                >
+                  <motion.div
+                    initial={{ scale: 0, rotate: -15 }}
+                    animate={{ scale: 1, rotate: 0 }}
+                    className="mx-auto w-10 h-10 bg-primary/10 rounded-full flex items-center justify-center"
+                  >
+                    <Rocket className="w-5 h-5 text-primary" />
+                  </motion.div>
+
+                  <div className="space-y-1">
+                    <p className="text-foreground font-medium text-sm">
+                      Ready to go!
+                    </p>
+                    <p className="text-muted-foreground text-xs">
+                      Redirecting to home...
+                    </p>
+                  </div>
+
+                  <motion.div
+                    initial={{ width: 0 }}
+                    animate={{ width: "100%" }}
+                    transition={{ duration: 2.6, ease: "easeInOut" }}
+                    className="h-0.5 bg-primary/60 rounded-full"
+                  />
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
+        </motion.div>
       </div>
-
-      <div className="absolute bottom-20 left-1/2 -translate-x-1/2 w-96 h-32 bg-gradient-to-r from-cyan-500 via-blue-500 to-cyan-500 rounded-full blur-3xl opacity-10 pointer-events-none" />
     </div>
   );
 }

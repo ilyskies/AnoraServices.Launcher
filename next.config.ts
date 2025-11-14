@@ -11,6 +11,10 @@ const nextConfig: NextConfig = {
         protocol: "https",
         hostname: "images-ext-1.discordapp.net",
       },
+      {
+        protocol: "https",
+        hostname: "static0.gamerantimages.com",
+      },
     ],
   },
 };

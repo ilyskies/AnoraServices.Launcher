@@ -39,7 +39,7 @@ export const NotificationBanner = ({
       const timer = setTimeout(handleDismiss, dismissAfter);
       return () => clearTimeout(timer);
     }
-  }, [autoDismiss, dismissAfter, isVisible]);
+  }, [autoDismiss, dismissAfter, handleDismiss, isVisible]);
 
   if (!isVisible) return null;
 

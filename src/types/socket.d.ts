@@ -10,6 +10,7 @@ export interface SocketEventMap {
   request_user: void;
   authenticated: void;
 
+  setup_complete: void;
   set_new_username: { username: string };
   request_heartbeat: void;
 }
