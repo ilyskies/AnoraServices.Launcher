@@ -10,8 +10,7 @@ const defaultNewsItems: NewsItem[] = [
     id: "default",
     title: "ANORA",
     subtitle: "Welcome to Anora",
-    description:
-      "Experience the legacy of Fortnite with enhanced gameplay and exclusive content.",
+    description: "Experience Chapter 2 - Season 5 with Anora!",
     backgroundImage:
       "https://static0.gamerantimages.com/wordpress/wp-content/uploads/2021/01/Fortnite-Season-5.jpg",
   },

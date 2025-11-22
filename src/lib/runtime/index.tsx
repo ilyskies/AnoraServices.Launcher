@@ -29,6 +29,7 @@ export const Runtime = ({ children }: RuntimeProps) => {
     updateUser,
     updateToken,
     setDisplayName,
+    logout,
     user,
   } = useAuth();
   const { config, isDev } = useConfig();
@@ -81,6 +82,7 @@ export const Runtime = ({ children }: RuntimeProps) => {
       ) {
         title = "Authentication Failed";
         message = "Your session has expired. Please log in again.";
+        logout();
       } else if (errorData.message?.includes("Not authenticated")) {
         title = "Authentication Required";
         message = "Please log in to continue.";

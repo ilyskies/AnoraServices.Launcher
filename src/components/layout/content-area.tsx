@@ -4,6 +4,7 @@ import { AnoraUser } from "@/types/anora";
 import { WelcomeHeader } from "../sections/home/welcome_header";
 import { NewsSection } from "../sections/home/news_section";
 import { PatchNotesSection } from "../sections/home/patch_notes_section";
+import { LibrarySection } from "../sections/library/library-section";
 
 export function ContentArea({
   activeTab,
@@ -22,6 +23,12 @@ export function ContentArea({
             <PatchNotesSection />
           </div>
         </>
+      )}
+
+      {activeTab === "library" && (
+        <div className="w-full h-full">
+          <LibrarySection />
+        </div>
       )}
     </div>
   );

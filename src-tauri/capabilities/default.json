@@ -22,6 +22,7 @@
     "core:window:allow-set-focus",
     "core:webview:allow-internal-toggle-devtools",
     "deep-link:default",
-    "shell:default"
+    "shell:default",
+    "dialog:default"
   ]
 }

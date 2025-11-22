@@ -1,9 +1,17 @@
-use tauri::{Emitter, Manager};
+use tauri::{Emitter, Manager, webview::WebviewWindowBuilder, WebviewUrl};
 use tauri_plugin_deep_link::DeepLinkExt;
+
+use crate::modules::build;
+
+mod modules;
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
+    let port: u16 = 9527;
+
     tauri::Builder::default()
+        .plugin(tauri_plugin_localhost::Builder::new(port).build())
+        .plugin(tauri_plugin_dialog::init())
         .plugin(tauri_plugin_single_instance::init(|app, argv, _cwd| {
             println!("a new app instance was opened with {argv:?} and the deep link event was already triggered");
             
@@ -22,7 +30,7 @@ pub fn run() {
         }))
         .plugin(tauri_plugin_shell::init())
         .plugin(tauri_plugin_deep_link::init())
-        .setup(|app| {
+        .setup(move |app| { 
             let main_window = app
                 .get_webview_window("main")
                 .expect("Failed to get main window");
@@ -37,7 +45,7 @@ pub fn run() {
                     .register("anora")
                     .expect("Failed to register deep link scheme");
                 
-                    if let Ok(Some(url)) = app.deep_link().get_current() {
+                if let Ok(Some(url)) = app.deep_link().get_current() {
                     main_window.emit("deep-link", vec![url]).ok();
                 }
             }
@@ -51,7 +59,11 @@ pub fn run() {
 
             Ok(())
         })
-        .invoke_handler(tauri::generate_handler![])
+        .invoke_handler(tauri::generate_handler![
+            build::check_file_exists, 
+            build::locate_version, 
+            build::get_directory_size
+        ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }
