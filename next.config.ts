@@ -35,6 +35,7 @@ const nextConfig: NextConfig = {
     dangerouslyAllowSVG: true,
     contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
   },
+  devIndicators: false,
   assetPrefix: isProd ? undefined : `http://${internalHost}:3000`,
 };
 
